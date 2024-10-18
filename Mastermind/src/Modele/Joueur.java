@@ -7,25 +7,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Joueur implements JoueurInterface {
-    private int id_joueur;
-    private String nom_joueur;
+    private int idJoueur;
+    private String nomJoueur;
 
-    public Joueur(int id_joueur, String nom_joueur) {
-        this.id_joueur = id_joueur;
-        this.nom_joueur = nom_joueur;
+    public Joueur(int idJoueur, String nomJoueur) {
+        this.idJoueur = idJoueur;
+        this.nomJoueur = nomJoueur;
     }
 
     public int getId() {
-        return this.id_joueur;
+        return this.idJoueur;
     }
 
     public String getNom() {
-        return this.nom_joueur;
+        return this.nomJoueur;
     }
 
     public String toString() {
-        return ("Identifiant " + this.id_joueur + "\n" +
-                "Nom " + this.nom_joueur + "\n");
+        return ("Identifiant " + this.idJoueur + "\n" +
+                "Nom " + this.nomJoueur + "\n");
     }
 
     public void createJoueurInDB() {
@@ -35,12 +35,12 @@ public class Joueur implements JoueurInterface {
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
-            stmt.setString(1, nom_joueur);
+            stmt.setString(1, nomJoueur);
             stmt.executeUpdate();
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    this.id_joueur = generatedKeys.getInt(1);
+                    this.idJoueur = generatedKeys.getInt(1);
                 }
             }
         } catch (SQLException e) {
@@ -59,8 +59,8 @@ public class Joueur implements JoueurInterface {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                this.id_joueur = rs.getInt("id_joueur");
-                this.nom_joueur = rs.getString("nom_joueur");
+                this.idJoueur = rs.getInt("id_joueur");
+                this.nomJoueur = rs.getString("nom_joueur");
                 return this.toString();
             } else {
                 return "Joueur non trouvé.";
