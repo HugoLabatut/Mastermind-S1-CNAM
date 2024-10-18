@@ -23,6 +23,10 @@ public class Partie implements PartieInterface{
         this.idPartie = addPartieToDb(idJoueur, this.coupGagnant);
     }
 
+    public void initiateNouvellePartieInvite(int length, int nbColor) {
+        this.coupGagnant = generateCoupGagnant(length, nbColor);
+    }
+
     private int[] generateCoupGagnant(int length, int nbColor) {
         int[] coupGagnant = new int[length];
         Random r = new Random();
