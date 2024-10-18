@@ -77,7 +77,7 @@ public class Joueur implements JoueurInterface {
 
         try (
                 Connection con = DBConnector.connectToDB();
-                PreparedStatement stmt = con.prepareStatement(requete);
+                PreparedStatement stmt = con.prepareStatement(requete)
         ) {
             ResultSet rs = stmt.executeQuery();
             return resultSetToList(rs);
