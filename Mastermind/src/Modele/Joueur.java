@@ -1,27 +1,95 @@
 package Modele;
 
-public class Joueur implements JoueurInterface {
-    private int id;
-    private String nom;
+import Utils.DBConnector;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-    public Joueur(int id, String nom) {
-        this.id = id;
-        this.nom = nom;
+public class Joueur implements JoueurInterface {
+    private int id_joueur;
+    private String nom_joueur;
+
+    public Joueur(int id_joueur, String nom_joueur) {
+        this.id_joueur = id_joueur;
+        this.nom_joueur = nom_joueur;
     }
 
     public int getId() {
-        return this.id;
+        return this.id_joueur;
     }
 
     public String getNom() {
-        return this.nom;
+        return this.nom_joueur;
     }
 
     public String toString() {
-        return "ID: " + this.id + ", Nom: " + this.nom;
+        return ("Identifiant " + this.id_joueur + "\n" +
+                "Nom " + this.nom_joueur + "\n");
     }
 
-    public String GetJoueur() {
-        return "";
+    public void createJoueurInDB() {
+        String requete = "INSERT INTO joueur (nom_joueur) " +
+                "VALUES (?)";
+        try (
+                Connection con = DBConnector.connectToDB();
+                PreparedStatement stmt = con.prepareStatement(requete, PreparedStatement.RETURN_GENERATED_KEYS)
+        ) {
+            stmt.setString(1, nom_joueur);
+            stmt.executeUpdate();
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    this.id_joueur = generatedKeys.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur DB lors de la création : " + e.getMessage() + "\n");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getOneJoueurInDb(int id) {
+        String requete = "SELECT * FROM joueur WHERE id_joueur = ?";
+        try (
+                Connection con = DBConnector.connectToDB();
+                PreparedStatement stmt = con.prepareStatement(requete)
+        ) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                this.id_joueur = rs.getInt("id_joueur");
+                this.nom_joueur = rs.getString("nom_joueur");
+                return this.toString();
+            } else {
+                return "Joueur non trouvé.";
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur DB lors de la récupération du joueur : " + e.getMessage() + "\n");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String getAllJoueurInDb() {
+        StringBuilder result = new StringBuilder();
+        String requete = "SELECT * FROM joueur";
+
+        try (
+                Connection con = DBConnector.connectToDB();
+                PreparedStatement stmt = con.prepareStatement(requete);
+                ResultSet rs = stmt.executeQuery()
+        ) {
+            while (rs.next()) {
+                int id = rs.getInt("id_joueur");
+                String nom = rs.getString("nom_joueur");
+                result.append("Identifiant: ").append(id).append(", Nom: ").append(nom).append("\n");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur DB lors de la récupération des joueurs : " + e.getMessage() + "\n");
+            throw new RuntimeException(e);
+        }
+
+        return result.length() > 0 ? result.toString() : "Aucun joueur trouvé.";
     }
 }

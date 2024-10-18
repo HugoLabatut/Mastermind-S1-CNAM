@@ -7,6 +7,10 @@ public interface JoueurInterface {
 
     public String toString();
 
-    public String GetJoueur();
+    public String getOneJoueurInDb(int id);
+
+    public String getAllJoueurInDb();
+
+    public void createJoueurInDB();
 
 }
