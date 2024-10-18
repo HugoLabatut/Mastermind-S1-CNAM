@@ -51,12 +51,13 @@ public class Partie implements PartieInterface{
 
     // Partie CRUD (ou CRU dans ce cas)
 
-    public ArrayList<HashMap<String, Object>> readAllPartiesFromDb() {
-        String requete = "SELECT * FROM partie";
+    public ArrayList<HashMap<String, Object>> readAllPartiesOfPlayerFromDb(int idJoueur) {
+        String requete = "SELECT * FROM partie WHERE id_joueur = ?";
         try (
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete)
         ) {
+            stmt.setInt(1, idJoueur);
             ResultSet rs = stmt.executeQuery();
             return resultSetToList(rs);
         } catch (SQLException e) {
