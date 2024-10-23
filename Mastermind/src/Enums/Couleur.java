@@ -1,22 +1,24 @@
 package Enums;
 
+import java.awt.*;
+
 public enum Couleur {
-    ROUGE(1),
-    BLEU(2),
-    VERT(3),
-    JAUNE(4),
-    NOIR(5),
-    ORANGE(6),
-    MARRON(7),
-    FUCHSIA(8);
+    ROUGE(Color.RED),
+    BLEU(Color.BLUE),
+    VERT(Color.GREEN),
+    JAUNE(Color.YELLOW),
+    NOIR(Color.BLACK),
+    ORANGE(Color.ORANGE),
+    MARRON(new Color(165, 42, 42)), // Couleur marron personnalisée
+    FUCHSIA(new Color(255, 0, 255)); // Couleur fuchsia personnalisée
 
-    private final int valCouleur;
+    private final Color swingColor;
 
-    private Couleur(int coul) {
-        this.valCouleur = coul;
+    Couleur(Color swingColor) {
+        this.swingColor = swingColor;
     }
 
-    public int getCouleur() {
-        return this.valCouleur;
+    public Color getSwingColor() {
+        return swingColor;
     }
 }
