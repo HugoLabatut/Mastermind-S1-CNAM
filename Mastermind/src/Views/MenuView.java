@@ -9,37 +9,37 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class MenuView extends JFrame {
-    private String nomJoueur;
-    private JTextField inputJoueur;
     private JButton nouvPartieBtn;
-    private JScrollPane listeJoueurs;
+    private JButton listePartieBtn;
     private JButton quitterAppBtn;
 
     public MenuView() {
         setTitle("Mastermind - Menu principal");
-        setSize(600, 800);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        JPanel menuPanel = new JPanel(new BorderLayout(10,10));
-        JLabel menuTitle = new JLabel("Mastermind");
-        menuTitle.setFont(new Font("Arial", Font.PLAIN, 20));
-        menuTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        // Titre
+        JLabel menuTitle = new JLabel("Mastermind", SwingConstants.CENTER);
+        menuTitle.setFont(new Font("Arial", Font.BOLD, 24));
+        add(menuTitle, BorderLayout.NORTH);
 
-        nouvPartieBtn = new JButton("Nouvelle partie");
+        // Panneau principal des boutons
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        inputJoueur = new JTextField("Votre nom : ", 20);
-        inputJoueur.setHorizontalAlignment(JTextField.CENTER);
+        // Boutons
+        nouvPartieBtn = new JButton("Nouvelle partie en tant qu'invité");
+        listePartieBtn = new JButton("Liste des parties");
+        quitterAppBtn = new JButton("Quitter");
 
-        quitterAppBtn = new JButton("Quitter le logiciel");
-
-        menuPanel.add(menuTitle, BorderLayout.NORTH);
-        menuPanel.add(nouvPartieBtn, BorderLayout.CENTER);
-        menuPanel.add(inputJoueur, BorderLayout.SOUTH);
+        menuPanel.add(nouvPartieBtn);
+        menuPanel.add(listePartieBtn);
+        menuPanel.add(quitterAppBtn);
 
         add(menuPanel, BorderLayout.CENTER);
-        add(quitterAppBtn, BorderLayout.SOUTH);
-
-        nouvPartieBtn.addActionListener(e -> lancerNouvPartie(nomJoueur));
 
         setVisible(true);
     }
@@ -52,16 +52,7 @@ public class MenuView extends JFrame {
         return nouvPartieBtn;
     }
 
-    public String getInputJoueur() {
-        return inputJoueur.getText();
-    }
-
-    private void lancerNouvPartie(String nomJoueur) {
-        Joueur nouvJoueur = new Joueur();
-        nomJoueur = inputJoueur.getText();
-        nouvJoueur.createJoueurInDB(nomJoueur);
-        Partie nouvPartie = new Partie();
-        JeuView vueJeu = new JeuView();
-        JeuController jeu = new JeuController(nouvJoueur, nouvPartie, vueJeu);
+    public JButton getListePartieBtn() {
+        return listePartieBtn;
     }
 }

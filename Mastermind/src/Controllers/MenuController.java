@@ -19,12 +19,18 @@ public class MenuController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Joueur nouvJoueur = new Joueur();
-                String nomJoueur = view.getInputJoueur();
-                nouvJoueur.createJoueurInDB(nomJoueur);
                 Partie nouvPartie = new Partie();
                 JeuView vueJeu = new JeuView();
                 JeuController jeu = new JeuController(nouvJoueur, nouvPartie, vueJeu);
             }
+        });
+
+        this.view.getListePartieBtn().addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               // ListePartieView listepartie = new ListePartieView();
+               // new ListePartieController(listepartie);
+           }
         });
 
         this.view.getQuitterAppBtn().addActionListener(new ActionListener() {
