@@ -6,7 +6,8 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        MenuView menuwdw = new MenuView();
+        // Exécution de l'interface graphique du jeu Mastermind
+        SwingUtilities.invokeLater(JeuView::new);
     }
 
 }
