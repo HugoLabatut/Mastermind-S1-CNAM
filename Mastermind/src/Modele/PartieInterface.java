@@ -13,7 +13,8 @@ public interface PartieInterface {
 
     // Fonctions principales
 
-    void initiateNouvellePartie(int length, int nbColor, int idJoueur);
+    Partie initiateNouvellePartie(int lengthCoup, int length, int nbColor, int idJoueur);
+    Partie initiateNouvellePartieInvite(int lengthCoup, int length, int nbColor);
 
     private int[] generateCoupGagnant(int length, int nbColor) {
         return null;
