@@ -13,7 +13,7 @@ public interface PartieInterface {
 
     // Fonctions principales
 
-    public void initiateNouvellePartie(int length, int nbColor, int idJoueur);
+    void initiateNouvellePartie(int length, int nbColor, int idJoueur);
 
     private int[] generateCoupGagnant(int length, int nbColor) {
         return null;
@@ -22,22 +22,22 @@ public interface PartieInterface {
     // Vérifie à la fois les correspondances et le cas de victoire
     // Retourne un array de 3 int [x, y, z] = [Nombre de bonnes positions, nombre de mauvaises positions, victoire (1
     // si oui, 0 si non)
-    public int[] checkCoup(int[] coupPropose);
+    int[] checkCoup(int[] coupPropose);
 
 
     // Partie CRUD (ou CRU dans ce cas)
 
-    public ArrayList<HashMap<String, Object>> readAllPartiesFromDb();
+    ArrayList<HashMap<String, Object>> readAllPartiesOfPlayerFromDb(int idJoueur);
 
     // Appelle le readCoupsFromDb
-    public void readSinglePartieFromDb(int idPartie);
+    void readSinglePartieFromDb(int idPartie);
 
     private void readCoupsFromDb(int idPartie) { }
 
-    public int addPartieToDb(int idJoueur, int[] suitePartie);
+    int addPartieToDb(int idJoueur, int[] suitePartie);
 
     // int etatPartie : 0 si partie en cours, 1 si victoire, 2 si défaite
-    public void savePartieToDb(int etatPartie);
+    void savePartieToDb(int etatPartie);
 
 
     // Fonctions utilitaires
@@ -48,21 +48,21 @@ public interface PartieInterface {
 
     private static int compterElementsMemePlace(int[] coupGagnant, int[] coupPropose) {
         return 0;
-    };
+    }
 
     // Transforme un resultSet d'une requête SQL en array de hashMaps
-    public ArrayList<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException;
+    ArrayList<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException;
 
     // Transforme un array en int des chiffres qui le composent (opposé d'intToArray)
     // ex. entrée [1,2,3,4], sortie 1234
     private int arrayToInt(int[] tableau) {
         return 0;
-    };
+    }
 
     // Transforme un int en array des chiffres qui le composent (opposé d'arrayToInt)
     // ex. entrée 1234, sortie [1,2,3,4]
     private int[] intToArray(int nombre){
         return new int[]{0};
-    };
+    }
 
 }
