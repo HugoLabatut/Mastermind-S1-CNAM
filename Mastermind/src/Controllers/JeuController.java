@@ -1,16 +1,15 @@
 package Controllers;
-import Enums.Couleur;
-import Modele.Joueur;
-import Modele.Partie;
 import Views.JeuView;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class JeuController {
-    private Joueur joueur;
-    private Partie partie;
-    private JeuView vue;
-    private Couleur couleur;
+    private JeuView view;
 
-    public JeuController(Joueur j, Partie p, JeuView vue) {
-
+    public JeuController(JeuView view) {
+        this.view = view;
     }
 }

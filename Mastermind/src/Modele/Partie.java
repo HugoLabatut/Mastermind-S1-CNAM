@@ -1,5 +1,6 @@
 package Modele;
 
+import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,18 +14,56 @@ public class Partie implements PartieInterface{
     private int[] coupGagnant;
     private int[][] coups;
     private int nbCoupsInDb = 0;
+    private int maxCoups;
+    private int lengthCoup;
 
-    public Partie() { }
+    public Partie() {}
+
+    public int getLengthCoup() {
+        return lengthCoup;
+    }
+
+    public int getMaxCoups() {
+        return maxCoups;
+    }
 
     // Fonctions principales
 
-    public void initiateNouvellePartie(int length, int nbColor, int idJoueur) {
-        this.coupGagnant = generateCoupGagnant(length, nbColor);
+    public Partie initiateNouvellePartie(int lengthCoup, int maxCoups, int nbColor, int idJoueur) {
+        this.lengthCoup = lengthCoup;
+        this.maxCoups = maxCoups;
+        this.coupGagnant = generateCoupGagnant(lengthCoup, nbColor);
         this.idPartie = addPartieToDb(idJoueur, this.coupGagnant);
+        return this;
     }
 
-    public void initiateNouvellePartieInvite(int length, int nbColor) {
-        this.coupGagnant = generateCoupGagnant(length, nbColor);
+    public Partie initiateNouvellePartieInvite(int lengthCoup, int maxCoups, int nbColor) {
+        this.lengthCoup = lengthCoup;
+        this.maxCoups = maxCoups;
+        this.coupGagnant = generateCoupGagnant(lengthCoup, nbColor);
+        return this;
+    }
+
+    public Color[] getCoupGagnantAsColors() {
+        Color[] coupGagnantColors = new Color[this.coupGagnant.length];
+        for (int i = 0; i < this.coupGagnant.length; i++) {
+            coupGagnantColors[i] = new Color(this.coupGagnant[i]);
+        }
+        return coupGagnantColors;
+    }
+
+    public Color[][] getCoupsAsColors() {
+        if (coups == null) {
+            return null;
+        }
+        Color[][] coupsColors = new Color[this.coups.length][];
+        for (int i = 0; i < this.coups.length; i++) {
+            coupsColors[i] = new Color[this.coups[i].length];
+            for (int j = 0; j < this.coups[i].length; j++) {
+                coupsColors[i][j] = new Color(this.coups[i][j]);
+            }
+        }
+        return coupsColors;
     }
 
     private int[] generateCoupGagnant(int length, int nbColor) {
@@ -110,7 +149,8 @@ public class Partie implements PartieInterface{
     }
 
     public int addPartieToDb(int idJoueur, int[] suitePartie) {
-        String requete = "INSERT INTO partie (etat_partie, suite_partie, nbcoup_partie, id_joueur) VALUES (0, ?, 0, ?)";
+        String requete = "INSERT INTO partie (etat_partie, suite_partie, nbcoups_partie, id_joueur) VALUES (0, ?, 0, " +
+                "?)";
         try (
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS) // Indiquer que tu veux les clés générées

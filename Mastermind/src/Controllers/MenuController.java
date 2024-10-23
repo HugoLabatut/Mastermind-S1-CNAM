@@ -20,8 +20,9 @@ public class MenuController {
             public void actionPerformed(ActionEvent e) {
                 Joueur nouvJoueur = new Joueur();
                 Partie nouvPartie = new Partie();
-                JeuView vueJeu = new JeuView();
-                JeuController jeu = new JeuController(nouvJoueur, nouvPartie, vueJeu);
+                nouvPartie.initiateNouvellePartieInvite(4,12,8);
+                JeuView vueJeu = new JeuView(nouvPartie, nouvJoueur);
+                JeuController jeu = new JeuController(vueJeu);
             }
         });
 
