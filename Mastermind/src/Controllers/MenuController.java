@@ -2,6 +2,7 @@ package Controllers;
 
 import Modele.Joueur;
 import Modele.Partie;
+import Views.AllPartiesByIdView;
 import Views.JeuView;
 import Views.MenuView;
 
@@ -27,12 +28,25 @@ public class MenuController {
         });
 
         this.view.getListePartieBtn().addActionListener(new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
-               // ListePartieView listepartie = new ListePartieView();
-               // new ListePartieController(listepartie);
-           }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Initialiser la vue des parties
+                AllPartiesByIdView allPartiesByIdView = new AllPartiesByIdView();
+
+                // Initialiser le contrôleur des parties
+                AllPartiesByIdController allPartiesByIdController = new AllPartiesByIdController(allPartiesByIdView);
+
+                // Simuler l'ID d'un joueur pour la démonstration (ex. : id = 1)
+                allPartiesByIdController.afficherPartiesJoueur(1);
+
+                // Afficher la vue
+                allPartiesByIdView.setVisible(true);
+
+                // Masquer la vue du menu (optionnel selon votre logique)
+                view.setVisible(false);
+            }
         });
+
 
         this.view.getQuitterAppBtn().addActionListener(new ActionListener() {
             @Override

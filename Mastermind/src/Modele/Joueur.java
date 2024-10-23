@@ -43,6 +43,7 @@ public class Joueur implements JoueurInterface {
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     this.idJoueur = generatedKeys.getInt(1);
+                    this.nomJoueur = nom_joueur;
                 }
             }
         } catch (SQLException e) {
@@ -63,9 +64,9 @@ public class Joueur implements JoueurInterface {
             if (rs.next()) {
                 this.idJoueur = rs.getInt("id_joueur");
                 this.nomJoueur = rs.getString("nom_joueur");
-                return this.toString();
+                return this.nomJoueur; // Retourner seulement le nom du joueur
             } else {
-                return "Joueur non trouvé.";
+                return "Joueur non trouvé."; // Vous pourriez aussi choisir de gérer cela différemment
             }
         } catch (SQLException e) {
             System.out.println("Erreur DB lors de la récupération du joueur : " + e.getMessage() + "\n");
