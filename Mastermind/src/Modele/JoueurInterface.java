@@ -14,6 +14,6 @@ public interface JoueurInterface {
 
     public ArrayList<HashMap<String, Object>> getAllJoueurInDb();
 
-    public void createJoueurInDB();
+    public void createJoueurInDB(String nom_joueur);
 
 }
