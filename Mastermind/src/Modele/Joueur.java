@@ -15,6 +15,8 @@ public class Joueur implements JoueurInterface {
         this.nomJoueur = nomJoueur;
     }
 
+    public Joueur() {}
+
     public int getId() {
         return this.idJoueur;
     }
@@ -28,7 +30,7 @@ public class Joueur implements JoueurInterface {
                 "Nom " + this.nomJoueur + "\n");
     }
 
-    public void createJoueurInDB() {
+    public void createJoueurInDB(String nom_joueur) {
         String requete = "INSERT INTO joueur (nom_joueur) " +
                 "VALUES (?)";
         try (

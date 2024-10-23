@@ -1,44 +1,67 @@
 package Views;
 
+import Controllers.JeuController;
+import Modele.Joueur;
+import Modele.Partie;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class MenuView extends JFrame {
+    private String nomJoueur;
+    private JTextField inputJoueur;
+    private JButton nouvPartieBtn;
+    private JScrollPane listeJoueurs;
+    private JButton quitterAppBtn;
+
     public MenuView() {
         setTitle("Mastermind - Menu principal");
         setSize(600, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel menuPanel = new JPanel(new BorderLayout(2,2));
+        JPanel menuPanel = new JPanel(new BorderLayout(10,10));
         JLabel menuTitle = new JLabel("Mastermind");
         menuTitle.setFont(new Font("Arial", Font.PLAIN, 20));
         menuTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JButton nouvpartieBtn = new JButton("Nouvelle partie");
+        nouvPartieBtn = new JButton("Nouvelle partie");
 
-        JButton quitterappBtn = new JButton("Quitter le logiciel");
+        inputJoueur = new JTextField("Votre nom : ", 20);
+        inputJoueur.setHorizontalAlignment(JTextField.CENTER);
 
-        add(menuTitle, BorderLayout.NORTH);
-        add(nouvpartieBtn, BorderLayout.CENTER);
-        add(quitterappBtn, BorderLayout.SOUTH);
+        quitterAppBtn = new JButton("Quitter le logiciel");
 
-        quitterappBtn.addActionListener(e -> fermerApp());
+        menuPanel.add(menuTitle, BorderLayout.NORTH);
+        menuPanel.add(nouvPartieBtn, BorderLayout.CENTER);
+        menuPanel.add(inputJoueur, BorderLayout.SOUTH);
+
+        add(menuPanel, BorderLayout.CENTER);
+        add(quitterAppBtn, BorderLayout.SOUTH);
+
+        nouvPartieBtn.addActionListener(e -> lancerNouvPartie(nomJoueur));
 
         setVisible(true);
     }
 
-    private void fermerApp() {
-        int reponse = JOptionPane.showConfirmDialog(
-                null,
-                "Voulez-vous quitter l'application ?",
-                "Quitter l'application",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
+    public JButton getQuitterAppBtn() {
+        return quitterAppBtn;
+    }
 
-        if(reponse == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
+    public JButton getNouvPartieBtn() {
+        return nouvPartieBtn;
+    }
+
+    public String getInputJoueur() {
+        return inputJoueur.getText();
+    }
+
+    private void lancerNouvPartie(String nomJoueur) {
+        Joueur nouvJoueur = new Joueur();
+        nomJoueur = inputJoueur.getText();
+        nouvJoueur.createJoueurInDB(nomJoueur);
+        Partie nouvPartie = new Partie();
+        JeuView vueJeu = new JeuView();
+        JeuController jeu = new JeuController(nouvJoueur, nouvPartie, vueJeu);
     }
 }
