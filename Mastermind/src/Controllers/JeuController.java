@@ -10,9 +10,7 @@ public class JeuController {
     private JeuView vue;
     private Couleur couleur;
 
-    /*
-    public JeuController(Joueur j, Partie p) {
+    public JeuController(Joueur j, Partie p, JeuView vue) {
 
     }
-    */
 }

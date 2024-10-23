@@ -1,44 +1,58 @@
 package Views;
 
+import Controllers.JeuController;
+import Modele.Joueur;
+import Modele.Partie;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class MenuView extends JFrame {
+    private JButton nouvPartieBtn;
+    private JButton listePartieBtn;
+    private JButton quitterAppBtn;
+
     public MenuView() {
         setTitle("Mastermind - Menu principal");
-        setSize(600, 800);
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
 
-        JPanel menuPanel = new JPanel(new BorderLayout(2,2));
-        JLabel menuTitle = new JLabel("Mastermind");
-        menuTitle.setFont(new Font("Arial", Font.PLAIN, 20));
-        menuTitle.setHorizontalAlignment(SwingConstants.CENTER);
-
-        JButton nouvpartieBtn = new JButton("Nouvelle partie");
-
-        JButton quitterappBtn = new JButton("Quitter le logiciel");
-
+        // Titre
+        JLabel menuTitle = new JLabel("Mastermind", SwingConstants.CENTER);
+        menuTitle.setFont(new Font("Arial", Font.BOLD, 24));
         add(menuTitle, BorderLayout.NORTH);
-        add(nouvpartieBtn, BorderLayout.CENTER);
-        add(quitterappBtn, BorderLayout.SOUTH);
 
-        quitterappBtn.addActionListener(e -> fermerApp());
+        // Panneau principal des boutons
+        JPanel menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        // Boutons
+        nouvPartieBtn = new JButton("Nouvelle partie en tant qu'invité");
+        listePartieBtn = new JButton("Liste des parties");
+        quitterAppBtn = new JButton("Quitter");
+
+        menuPanel.add(nouvPartieBtn);
+        menuPanel.add(listePartieBtn);
+        menuPanel.add(quitterAppBtn);
+
+        add(menuPanel, BorderLayout.CENTER);
 
         setVisible(true);
     }
 
-    private void fermerApp() {
-        int reponse = JOptionPane.showConfirmDialog(
-                null,
-                "Voulez-vous quitter l'application ?",
-                "Quitter l'application",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE
-        );
+    public JButton getQuitterAppBtn() {
+        return quitterAppBtn;
+    }
 
-        if(reponse == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
+    public JButton getNouvPartieBtn() {
+        return nouvPartieBtn;
+    }
+
+    public JButton getListePartieBtn() {
+        return listePartieBtn;
     }
 }
