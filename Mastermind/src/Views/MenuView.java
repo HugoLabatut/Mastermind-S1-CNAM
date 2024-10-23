@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class MenuView extends JFrame {
     private JButton nouvPartieBtn;
     private JButton listePartieBtn;
+    private JButton listeJoueursBtn;
     private JButton quitterAppBtn;
 
     public MenuView() {
@@ -27,16 +28,18 @@ public class MenuView extends JFrame {
 
         // Panneau principal des boutons
         JPanel menuPanel = new JPanel();
-        menuPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        menuPanel.setLayout(new GridLayout(4, 1, 10, 10));
         menuPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
         // Boutons
         nouvPartieBtn = new JButton("Nouvelle partie en tant qu'invité");
         listePartieBtn = new JButton("Liste des parties");
+        listeJoueursBtn = new JButton("Liste des joueurs");
         quitterAppBtn = new JButton("Quitter");
 
         menuPanel.add(nouvPartieBtn);
         menuPanel.add(listePartieBtn);
+        menuPanel.add(listeJoueursBtn);
         menuPanel.add(quitterAppBtn);
 
         add(menuPanel, BorderLayout.CENTER);

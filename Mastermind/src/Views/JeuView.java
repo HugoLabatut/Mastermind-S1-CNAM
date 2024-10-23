@@ -42,6 +42,7 @@ public class JeuView extends JFrame {
         setTitle("Mastermind");
         setSize(800, 800); // Agrandir la fenêtre sur l'axe X
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
         // Panel pour sélectionner les couleurs
@@ -53,6 +54,7 @@ public class JeuView extends JFrame {
             JButton colorButton = new JButton();
             colorButton.setPreferredSize(new Dimension(40, 40));
             colorButton.setBackground(color);
+            colorButton.setOpaque(true);
             colorButton.addActionListener(new ColorButtonListener());
             colorSelectionPanel.add(colorButton);
         }
@@ -70,6 +72,7 @@ public class JeuView extends JFrame {
                 boardButtons[row][col].setPreferredSize(new Dimension(40, 40));
                 boardButtons[row][col].setEnabled(false);
                 boardButtons[row][col].setBackground(Color.WHITE);
+                boardButtons[row][col].setOpaque(true);
                 final int currentCol = col;
                 boardButtons[row][col].addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -238,6 +241,7 @@ public class JeuView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if(joueur.getId() == 0) {
                 System.out.print("Retour menu invité");
+                dispose();
             }
         }
     }
