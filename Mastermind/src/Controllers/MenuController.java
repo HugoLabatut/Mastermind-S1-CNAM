@@ -4,6 +4,7 @@ import Modele.Joueur;
 import Modele.Partie;
 import Views.AllPartiesByIdView;
 import Views.JeuView;
+import Views.ListeJoueursView;
 import Views.MenuView;
 
 import javax.swing.*;
@@ -23,7 +24,8 @@ public class MenuController {
                 Partie nouvPartie = new Partie();
                 nouvPartie.initiateNouvellePartieInvite(4,12,8);
                 JeuView vueJeu = new JeuView(nouvPartie, nouvJoueur);
-                JeuController jeu = new JeuController(vueJeu);
+                JeuController jeu = JeuController.getInstance();
+                jeu.setPartieEnCours(nouvPartie);
             }
         });
 
@@ -47,6 +49,14 @@ public class MenuController {
             }
         });
 
+        this.view.getListeJoueursBtn().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ListeJoueursView vueListeJoueurs = new ListeJoueursView();
+                new ListeJoueursController(vueListeJoueurs);
+                view.dispose();
+            }
+        });
 
         this.view.getQuitterAppBtn().addActionListener(new ActionListener() {
             @Override

@@ -1,6 +1,7 @@
 package Modele;
 
 import Utils.DBConnector;
+import Utils.UtilsMethods;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class Joueur implements JoueurInterface {
                 PreparedStatement stmt = con.prepareStatement(requete)
         ) {
             ResultSet rs = stmt.executeQuery();
-            return resultSetToList(rs);
+            return UtilsMethods.resultSetToList(rs);
         } catch (SQLException e) {
             System.out.println("Erreur DB lors de la récupération des joueurs : " + e.getMessage() + "\n");
             throw new RuntimeException(e);
