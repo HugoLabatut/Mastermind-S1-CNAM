@@ -122,6 +122,7 @@ public class Partie implements PartieInterface{
             ResultSet rs = stmt.executeQuery();
             this.idPartie = idPartie;
             if (rs.next()) {
+                this.idPartie = rs.getInt("id_partie");
                 int number = rs.getInt(3); // Récupère la 3ème colonne comme entier
                 this.coupGagnant = UtilsColor.intToArray(number);
                 readCoupsFromDb(idPartie);
