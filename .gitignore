@@ -26,3 +26,4 @@ replay_pid*
 # Swagger specific
 # Ignore Swagger UI build files, if any
 swagger-ui/
+/.idea/sqldialects.xml

@@ -23,13 +23,14 @@ public class JeuView extends JFrame {
     Joueur joueur;
     JeuController controller;
     private int etatPartie;
+    Color[] correctCombination;
 
     public JeuView(Partie partie, Joueur joueur) {
 
         // Récupération des infos de la partie
+        correctCombination = partie.getCoupGagnantAsColors();
         this.partie = partie;
         this.joueur = joueur;
-        Color[] correctCombination = partie.getCoupGagnantAsColors();
         this.currentRow = partie.getMaxCoups();
         this.etatPartie = partie.getEtatPartie();
         controller = JeuController.getInstance();
@@ -95,18 +96,15 @@ public class JeuView extends JFrame {
             boardPanel.add(resultLabels[row][0]);
         }
 
-        // Settings mais masquage de la combinaison gagnante
+        // Settings de la ligne de la combinaison gagnante, gris si partie en cours, la réponse sinon
         for (int col = 0; col < partie.getLengthCoup(); col++) {
-            boardButtons[0][col].setBackground(correctCombination[col]);
-            boardButtons[0][col].setVisible(false);
-        }
-
-        // Activer uniquement la ligne courante (currentRow) pour la suppression des colors si la partie n'est pas terminée
-        if (etatPartie == 0) {
-            for (int col = 0; col < partie.getLengthCoup(); col++) {
-                boardButtons[currentRow][col].setEnabled(true);
+            if (etatPartie == 0) {
+                boardButtons[0][col].setBackground(new Color(175, 175, 175));
+            } else {
+                boardButtons[0][col].setBackground(correctCombination[col]);
             }
         }
+        resultLabels[0][0].setText("Combinaison correcte");
 
         // Panneau de contrôle avec un bouton "Retour à l'accueil" et un label d'information
         JButton accueilButton = new JButton("Retour à l'accueil");
@@ -248,9 +246,8 @@ public class JeuView extends JFrame {
             } else {
                 // Affichage de la combinaison correcte
                 for (int col = 0; col < partie.getLengthCoup(); col++) {
-                    boardButtons[0][col].setVisible(true);
+                    boardButtons[0][col].setBackground(correctCombination[col]);
                 }
-                resultLabels[0][0].setText("Combinaison correcte");
 
                 //Affichage du message de victoire et setting de l'état de la partie
                 if (result[0] == 1) {

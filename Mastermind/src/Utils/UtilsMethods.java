@@ -28,7 +28,7 @@ public class UtilsMethods {
         return resultMap;
     }
 
-    public Object[][] convertirEnTableau(ArrayList<HashMap<String, Object>> listeParties) {
+    public static Object[][] convertirEnTableau(ArrayList<HashMap<String, Object>> listeParties) {
         if (listeParties == null || listeParties.isEmpty()) {
             return new Object[0][0]; // Retourner un tableau vide si la liste est vide
         }
