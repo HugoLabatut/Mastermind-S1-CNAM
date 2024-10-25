@@ -3,6 +3,7 @@ package Controllers;
 import Modele.Joueur;
 import Modele.Partie;
 import Views.JeuView;
+import Views.ListeJoueursView;
 import Views.MenuView;
 
 import javax.swing.*;
@@ -33,6 +34,15 @@ public class MenuController {
                // ListePartieView listepartie = new ListePartieView();
                // new ListePartieController(listepartie);
            }
+        });
+
+        this.view.getListeJoueursBtn().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ListeJoueursView vueListeJoueurs = new ListeJoueursView();
+                new ListeJoueursController(vueListeJoueurs);
+                view.dispose();
+            }
         });
 
         this.view.getQuitterAppBtn().addActionListener(new ActionListener() {
