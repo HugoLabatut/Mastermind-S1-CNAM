@@ -55,6 +55,10 @@ public class MenuView extends JFrame {
         return nouvPartieBtn;
     }
 
+    public JButton getListeJoueursBtn() {
+        return listeJoueursBtn;
+    }
+
     public JButton getListePartieBtn() {
         return listePartieBtn;
     }
