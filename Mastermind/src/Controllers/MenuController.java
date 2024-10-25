@@ -36,8 +36,8 @@ public class MenuController {
                 // Initialiser le contrôleur des parties
                 AllPartiesByIdController allPartiesByIdController = new AllPartiesByIdController(allPartiesByIdView);
 
-                // Simuler l'ID d'un joueur pour la démonstration (ex. : id = 1)
-                allPartiesByIdController.afficherPartiesJoueur(1);
+                // Activer la vue
+                allPartiesByIdView.initializeView();
 
                 // Afficher la vue
                 allPartiesByIdView.setVisible(true);
