@@ -28,7 +28,7 @@ public class AllPartiesByIdController {
         int idJoueur = 1;
         ArrayList<HashMap<String, Object>> parties = partieModel.readAllPartiesOfPlayerFromDb(idJoueur);
         // Mise à jour de la vue avec les données du joueur et des parties
-        return UtilsMethods.getInstance().convertirEnTableau(parties);
+        return UtilsMethods.convertirEnTableau(parties);
     }
 
     // Méthode pour afficher les détails de la partie spécifique
