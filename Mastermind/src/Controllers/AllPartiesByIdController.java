@@ -38,5 +38,4 @@ public class AllPartiesByIdController {
         JeuView jeuView = new JeuView(partieModel, joueurModel);
         view.dispose();
     }
-
 }

@@ -104,7 +104,6 @@ public class AllPartiesByIdView extends JFrame {
             });
         }
 
-        @Override
         public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
             currentRow = row; // Récupérer l'index de la ligne actuelle pour l'action
             clicked = true;
