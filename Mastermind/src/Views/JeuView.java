@@ -1,6 +1,7 @@
 package Views;
 
 import Controllers.JeuController;
+import Controllers.MenuController;
 import Enums.Couleur;
 import Modele.Joueur;
 import Modele.Partie;
@@ -9,32 +10,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class JeuView extends JFrame {
-    private JPanel colorSelectionPanel;
-    private JPanel boardPanel;
-    private JPanel controlPanel;
-    private JLabel infoLabel;
-    private JButton confirmButton;
-    private JButton accueilButton;
-    private JButton[][] boardButtons; // Grille du plateau
-    private JLabel[][] resultLabels; // Labels pour les résultats [x, y, z]
+    private final JLabel infoLabel;
+    private final JButton confirmButton;
+    private final JButton[][] boardButtons; // Grille du plateau
+    private final JLabel[][] resultLabels; // Labels pour les résultats [x, y, z]
     private Color[] currentCombination; // Tableau pour la combinaison en cours
-    private Color[] correctCombination; // Tableau pour la combinaison correcte
     private int currentRow; // Commence en bas, va vers le haut
-    private Color[] availableColors;
-    private JTextArea rulesArea;  // Bloc de texte en bas à gauche
     Partie partie;
     Joueur joueur;
+    JeuController controller;
+    private int etatPartie;
 
     public JeuView(Partie partie, Joueur joueur) {
 
+        // Récupération des infos de la partie
         this.partie = partie;
         this.joueur = joueur;
-        this.correctCombination = partie.getCoupGagnantAsColors();
+        Color[] correctCombination = partie.getCoupGagnantAsColors();
         this.currentRow = partie.getMaxCoups();
+        this.etatPartie = partie.getEtatPartie();
+        controller = JeuController.getInstance();
 
-        availableColors = new Color[Couleur.values().length];
+//        Color[] availableColors = new Color[partie.getMaxColors()];
+//        for (int i = 0; i < partie.getMaxColors(); i++) {
+        Color[] availableColors = new Color[Couleur.values().length];
         for (int i = 0; i < Couleur.values().length; i++) {
             availableColors[i] = Couleur.values()[i].getSwingColor();
         }
@@ -45,7 +47,7 @@ public class JeuView extends JFrame {
         setLayout(new BorderLayout());
 
         // Panel pour sélectionner les couleurs
-        colorSelectionPanel = new JPanel();
+        JPanel colorSelectionPanel = new JPanel();
         colorSelectionPanel.setLayout(new FlowLayout());
 
         // Ajout des couleurs disponibles sous forme de boutons ronds
@@ -58,7 +60,7 @@ public class JeuView extends JFrame {
         }
 
         // Plateau de jeu (13 lignes et (partie.getLengthCoup() + 1) colonnes pour les résultats)
-        boardPanel = new JPanel();
+        JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(partie.getMaxCoups() + 1, partie.getLengthCoup() + 1));  // +1 pour afficher [x, y, z] à droite
 
         boardButtons = new JButton[partie.getMaxCoups() + 1][partie.getLengthCoup()];
@@ -90,36 +92,38 @@ public class JeuView extends JFrame {
             boardPanel.add(resultLabels[row][0]);
         }
 
-        // Activer uniquement la ligne courante (currentRow) pour la suppression des colors
+        // Settings mais masquage de la combinaison gagnante
         for (int col = 0; col < partie.getLengthCoup(); col++) {
-            boardButtons[currentRow][col].setEnabled(true);
+            boardButtons[0][col].setBackground(correctCombination[col]);
+            boardButtons[0][col].setVisible(false);
+        }
+
+        // Activer uniquement la ligne courante (currentRow) pour la suppression des colors si la partie n'est pas terminée
+        if (etatPartie == 0) {
+            for (int col = 0; col < partie.getLengthCoup(); col++) {
+                boardButtons[currentRow][col].setEnabled(true);
+            }
         }
 
         // Panneau de contrôle avec un bouton "Retour à l'accueil" et un label d'information
-        accueilButton = new JButton("Retour à l'accueil");
+        JButton accueilButton = new JButton("Retour à l'accueil");
         accueilButton.addActionListener(new AccueilButtonListener());
 
-        controlPanel = new JPanel();
+        JPanel controlPanel = new JPanel();
         controlPanel.setLayout(new BorderLayout());
-        infoLabel = new JLabel("Choisissez une combinaison.");
+        if (etatPartie == 0) {
+            infoLabel = new JLabel("Choisissez une combinaison.");
+        } else if (etatPartie == 1) {
+            infoLabel = new JLabel("La partie est terminée, vous aviez gagné !");
+        } else {
+            infoLabel = new JLabel("La partie est terminée, vous aviez perdu !");
+        }
         infoLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         controlPanel.add(infoLabel, BorderLayout.WEST);
         controlPanel.add(accueilButton, BorderLayout.EAST);
-
+        
         // Bloc de texte en bas à gauche
-        rulesArea = new JTextArea(5, 20);
-        rulesArea.setEditable(false);
-        rulesArea.setLineWrap(true);
-        rulesArea.setWrapStyleWord(true);
-
-        rulesArea.append("Règles du jeu :\n");
-        rulesArea.append("""
-                Vous devez deviner une combinaison secrète de couleurs en proposant des combinaisons.
-                Après chaque essai, vous aurez des indices : un pion noir signifie qu'une couleur est correcte et bien placée, et un pion blanc signifie qu'une couleur est correcte mais mal placée.
-                Le but est de deviner la combinaison en un nombre limité d'essais.
-                """);
-
-        JScrollPane scrollPane = new JScrollPane(rulesArea);
+        JScrollPane scrollPane = getRulesScrollPane();
 
         confirmButton = new JButton("Confirmer le coup");
         confirmButton.setEnabled(false);  // Désactivé tant que la combinaison n'est pas complète
@@ -140,6 +144,21 @@ public class JeuView extends JFrame {
 
         displayPrecedentCoups();
         setVisible(true);
+    }
+
+    private static JScrollPane getRulesScrollPane() {
+        JTextArea rulesArea = new JTextArea(5, 20);
+        rulesArea.setEditable(false);
+        rulesArea.setLineWrap(true);
+        rulesArea.setWrapStyleWord(true);
+
+        rulesArea.append("Règles du jeu :\n");
+        rulesArea.append("""
+                Vous devez deviner une combinaison secrète de couleurs en proposant des combinaisons.
+                Après chaque essai, vous aurez des indices : un pion noir signifie qu'une couleur est correcte et bien placée, et un pion blanc signifie qu'une couleur est correcte mais mal placée.
+                Le but est de deviner la combinaison en un nombre limité d'essais.
+                """);
+        return new JScrollPane(rulesArea);
     }
 
     private void displayPrecedentCoups() {
@@ -179,7 +198,6 @@ public class JeuView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             JButton selectedButton = (JButton) e.getSource();
             Color selectedColor = selectedButton.getBackground();
-            System.out.print(currentRow);
             // Trouver la première case vide dans la ligne courante
             for (int col = 0; col < partie.getLengthCoup(); col++) {
                 if (currentCombination[col] == null) {
@@ -198,10 +216,11 @@ public class JeuView extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Envoyer la combinaison au contrôleur et recevoir les résultats
-            int[] result = {0, 2, 1}; // À changer pour faire un appel à la verif
+            System.out.print(Arrays.toString(currentCombination));
+            int[] result = controller.getRetourCoup(currentCombination); // À changer pour faire un appel à la vérification
 
             // Mettre à jour le label des résultats
-            resultLabels[currentRow][0].setText("[" + result[0] + ", " + result[1] + ", " + result[2] + "]");
+            resultLabels[currentRow][0].setText("<html>Couleurs bien placées : " + result[0] + "<br/>Couleurs correctes mais mal placées : " + result[1] + "</html>");
 
             // Logique pour confirmer le coup
             infoLabel.setText("Combinaison confirmée !");
@@ -213,7 +232,7 @@ public class JeuView extends JFrame {
             }
 
             // Déplacer à la ligne suivante si le coup n'est pas final
-            if (currentRow > 1 && result[0] != 1) {  // Si le jeu n'est pas gagné
+            if (currentRow > 1 && result[2] != 1) {  // Si le jeu n'est pas gagné
                 currentRow--;
                 currentCombination = new Color[partie.getLengthCoup()];  // Réinitialiser la combinaison pour la nouvelle ligne
 
@@ -224,11 +243,19 @@ public class JeuView extends JFrame {
 
                 infoLabel.setText("Nouvelle ligne, choisissez une nouvelle combinaison.");
             } else {
-                infoLabel.setText("Partie terminée !");
+                // Affichage de la combinaison correcte
+                for (int col = 0; col < partie.getLengthCoup(); col++) {
+                    boardButtons[0][col].setVisible(true);
+                }
+                resultLabels[0][0].setText("Combinaison correcte");
+
+                //Affichage du message de victoire et setting de l'état de la partie
                 if (result[0] == 1) {
-                    rulesArea.append("Vous avez gagné !\n");
+                    infoLabel.setText("Partie terminée ! Vous avez gagné !\n");
+                    etatPartie = 1;
                 } else {
-                    rulesArea.append("La partie est terminée. Essayez encore !\n");
+                    infoLabel.setText("Partie terminée ! Vous avez perdu !\n");
+                    etatPartie = 2;
                 }
             }
         }
@@ -236,9 +263,12 @@ public class JeuView extends JFrame {
 
     private class AccueilButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            if(joueur.getId() == 0) {
-                System.out.print("Retour menu invité");
+            if(joueur.getId() != 0) {
+                partie.savePartieToDb(etatPartie);
             }
+            JeuView.this.dispose();
+            MenuView newMenu = new MenuView();
+            new MenuController(newMenu);
         }
     }
 }

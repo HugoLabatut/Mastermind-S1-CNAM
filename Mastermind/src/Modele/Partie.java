@@ -3,10 +3,13 @@ package Modele;
 import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
 import Utils.DBConnector;
+import Utils.UtilsColor;
+import Utils.UtilsMethods;
 
 public class Partie implements PartieInterface{
 
@@ -16,6 +19,8 @@ public class Partie implements PartieInterface{
     private int nbCoupsInDb = 0;
     private int maxCoups;
     private int lengthCoup;
+    UtilsColor UtilsColor;
+    private int etatPartie = 0;
 
     public Partie() {}
 
@@ -44,24 +49,24 @@ public class Partie implements PartieInterface{
         return this;
     }
 
+    public int getEtatPartie() {
+        return this.etatPartie;
+    }
+
     public Color[] getCoupGagnantAsColors() {
-        Color[] coupGagnantColors = new Color[this.coupGagnant.length];
-        for (int i = 0; i < this.coupGagnant.length; i++) {
-            coupGagnantColors[i] = new Color(this.coupGagnant[i]);
-        }
-        return coupGagnantColors;
+        return Utils.UtilsColor.convertirIndicesEnCouleurs(coupGagnant);
     }
 
     public Color[][] getCoupsAsColors() {
+        if(this.idPartie != 0) {
+            readCoupsFromDb(this.idPartie);
+        }
         if (coups == null) {
             return null;
         }
         Color[][] coupsColors = new Color[this.coups.length][];
         for (int i = 0; i < this.coups.length; i++) {
-            coupsColors[i] = new Color[this.coups[i].length];
-            for (int j = 0; j < this.coups[i].length; j++) {
-                coupsColors[i][j] = new Color(this.coups[i][j]);
-            }
+            coupsColors[i] = Utils.UtilsColor.convertirIndicesEnCouleurs(this.coups[i]);
         }
         return coupsColors;
     }
@@ -77,6 +82,8 @@ public class Partie implements PartieInterface{
     }
 
     public int[] checkCoup(int[] coupPropose) {
+        System.out.print(Arrays.toString(coupGagnant));
+        System.out.print(Arrays.toString(coupPropose));
         int communs = compterElementsCommuns(coupGagnant, coupPropose);
         int bonnePlace = compterElementsMemePlace(coupGagnant, coupPropose);
         int mauvaisePlace = communs - bonnePlace;
@@ -98,7 +105,7 @@ public class Partie implements PartieInterface{
         ) {
             stmt.setInt(1, idJoueur);
             ResultSet rs = stmt.executeQuery();
-            return resultSetToList(rs);
+            return UtilsMethods.resultSetToList(rs);
         } catch (SQLException e) {
             System.out.println("Erreur DB lors de la lecture : " + e.getMessage() + "\n");
             throw new RuntimeException(e);
@@ -116,7 +123,7 @@ public class Partie implements PartieInterface{
             this.idPartie = idPartie;
             if (rs.next()) {
                 int number = rs.getInt(3); // Récupère la 3ème colonne comme entier
-                this.coupGagnant = intToArray(number);
+                this.coupGagnant = UtilsColor.intToArray(number);
                 readCoupsFromDb(idPartie);
             } else {
                 throw new SQLException("Aucune partie trouvée avec l'ID donné.");
@@ -138,7 +145,7 @@ public class Partie implements PartieInterface{
             ArrayList<int[]> coupsList = new ArrayList<>(); // Utiliser une liste dynamique
             while (rs.next()) {
                 int coup = rs.getInt(1);
-                coupsList.add(intToArray(coup));
+                coupsList.add(UtilsColor.intToArray(coup));
             }
             coups = coupsList.toArray(new int[coupsList.size()][]); // Convertir en tableau 2D
             nbCoupsInDb = coups.length;
@@ -155,7 +162,7 @@ public class Partie implements PartieInterface{
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS) // Indiquer que tu veux les clés générées
         ) {
-            stmt.setInt(1, arrayToInt(suitePartie));
+            stmt.setInt(1, UtilsColor.arrayToInt(suitePartie));
             stmt.setInt(2, idJoueur);
             stmt.executeUpdate();
 
@@ -194,7 +201,7 @@ public class Partie implements PartieInterface{
                     Connection con = DBConnector.connectToDB();
                     PreparedStatement stmt = con.prepareStatement(requeteCoup)
             ) {
-                stmt.setInt(1, arrayToInt(coups[i]));
+                stmt.setInt(1, UtilsColor.arrayToInt(coups[i]));
                 stmt.setInt(2, i);
                 stmt.setInt(3, idPartie);
                 stmt.executeUpdate();
@@ -237,46 +244,6 @@ public class Partie implements PartieInterface{
             }
         }
         return result;
-    }
-
-    public ArrayList<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
-        ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-
-        while (rs.next()) {
-            HashMap<String, Object> rowMap = new HashMap<>();
-            // Parcourir chaque colonne
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metaData.getColumnName(i);
-                Object columnValue = rs.getObject(i);
-                rowMap.put(columnName, columnValue);
-            }
-            resultList.add(rowMap); // Ajouter la ligne à la liste
-        }
-        return resultList;
-    }
-
-    // Transforme un array en int des chiffres qui le composent (opposé d'intToArray)
-    // ex. entrée [1,2,3,4], sortie 1234
-    private int arrayToInt(int[] tableau) {
-        int nombre = 0;
-        for (int j : tableau) {
-            nombre = nombre * 10 + j; // Décale les chiffres déjà présents à gauche et ajoute le nouveau chiffre
-        }
-        return nombre;
-    }
-
-    // Transforme un int en array des chiffres qui le composent (opposé d'arrayToInt)
-    // ex. entrée 1234, sortie [1,2,3,4]
-    private int[] intToArray(int nombre) {
-        String nombreString = String.valueOf(nombre);
-        int[] chiffres = new int[nombreString.length()];
-
-        for (int i = 0; i < nombreString.length(); i++) {
-            chiffres[i] = Character.getNumericValue(nombreString.charAt(i));
-        }
-        return chiffres;
     }
 
 }

@@ -1,6 +1,7 @@
 package Modele;
 
 import Utils.DBConnector;
+import Utils.UtilsMethods;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -82,28 +83,10 @@ public class Joueur implements JoueurInterface {
                 PreparedStatement stmt = con.prepareStatement(requete)
         ) {
             ResultSet rs = stmt.executeQuery();
-            return resultSetToList(rs);
+            return UtilsMethods.resultSetToList(rs);
         } catch (SQLException e) {
             System.out.println("Erreur DB lors de la récupération des joueurs : " + e.getMessage() + "\n");
             throw new RuntimeException(e);
         }
-    }
-
-    public ArrayList<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException {
-        ArrayList<HashMap<String, Object>> resultList = new ArrayList<>();
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-
-        while (rs.next()) {
-            HashMap<String, Object> rowMap = new HashMap<>();
-            // Parcourir chaque colonne
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metaData.getColumnName(i);
-                Object columnValue = rs.getObject(i);
-                rowMap.put(columnName, columnValue);
-            }
-            resultList.add(rowMap); // Ajouter la ligne à la liste
-        }
-        return resultList;
     }
 }

@@ -51,9 +51,6 @@ public interface PartieInterface {
         return 0;
     }
 
-    // Transforme un resultSet d'une requête SQL en array de hashMaps
-    ArrayList<HashMap<String, Object>> resultSetToList(ResultSet rs) throws SQLException;
-
     // Transforme un array en int des chiffres qui le composent (opposé d'intToArray)
     // ex. entrée [1,2,3,4], sortie 1234
     private int arrayToInt(int[] tableau) {
