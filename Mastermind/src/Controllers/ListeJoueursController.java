@@ -38,22 +38,21 @@ public class ListeJoueursController {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = view.getListeTable().getSelectedRow();
                 if(selectedRow != -1) {
-                    Object id = view.getListeTable().getValueAt(selectedRow, 0);
+                    int id = (int) view.getListeTable().getValueAt(selectedRow, 0);
                     Object nom = view.getListeTable().getValueAt(selectedRow, 1);
 
+                    /*
                     JOptionPane.showMessageDialog(
                             null,
                             "ID : " + id + "\nNom : " + nom,
                             "DEBUG joueur sélection.",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    /*
-                    Joueur joueur = new Joueur();
-                    int idJoueur = Integer.parseInt(joueur.getOneJoueurInDb((Integer) id));
-                    System.out.println(idJoueur);
-                    AllPartiesByIdView partiesView = new AllPartiesByIdView();
-                    AllPartiesByIdController partiesController = new AllPartiesByIdController(partiesView, idJoueur);
                      */
+                    Joueur joueur = new Joueur();
+                    joueur.getOneJoueurInDb(id);
+                    AllPartiesByIdController allPartiesByIdController = new AllPartiesByIdController(joueur);
+                    view.dispose();
                 } else {
                     JOptionPane.showMessageDialog(
                             null,
