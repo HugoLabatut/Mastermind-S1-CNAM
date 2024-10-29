@@ -25,6 +25,18 @@ public class Partie implements PartieInterface{
 
     public Partie() {}
 
+    public void setLengthCoup (int lengthCoup) {
+        this.lengthCoup = lengthCoup;
+    }
+
+    public void setMaxCoup (int maxCoups) {
+        this.maxCoups = maxCoups;
+    }
+
+    public void setMaxColors (int maxColors) {
+        this.maxColors = maxColors;
+    }
+
     public int getLengthCoup() {
         return lengthCoup;
     }
