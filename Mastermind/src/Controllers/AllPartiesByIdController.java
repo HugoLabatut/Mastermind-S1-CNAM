@@ -22,7 +22,7 @@ public class AllPartiesByIdController {
     public AllPartiesByIdController() {
         this.partieModel = new Partie();
         this.joueurModel = new Joueur();
-        this.view = new AllPartiesByIdView(joueurModel);
+        this.view = new AllPartiesByIdView(joueurModel, partieModel);
         view.setController(this);
 
         // Activer la vue

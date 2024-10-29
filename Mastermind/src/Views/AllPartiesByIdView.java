@@ -1,13 +1,16 @@
 package Views;
 
 import Controllers.AllPartiesByIdController;
+import Controllers.JeuController;
 import Modele.Joueur;
+import Modele.Partie;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 public class AllPartiesByIdView extends JFrame {
 
@@ -24,9 +27,11 @@ public class AllPartiesByIdView extends JFrame {
     private AllPartiesByIdController AllPartiesByIdController;
 
     private Joueur joueur;
+    private Partie partie;
 
-    public AllPartiesByIdView(Joueur joueur) {
+    public AllPartiesByIdView(Joueur joueur, Partie partie) {
         this.joueur = joueur;
+        this.partie = partie;
     }
 
     public void setController(AllPartiesByIdController controller) {
@@ -52,7 +57,7 @@ public class AllPartiesByIdView extends JFrame {
 
         boutonsPanel = new JPanel();
         boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        boutonNouvPartieBtn = new JButton("Nouvelle partie");
+        boutonNouvPartieBtn = createNewPartieBtn(partie);
         boutonRetourBtn = new JButton("Retour au menu");
         boutonsPanel.add(boutonNouvPartieBtn);
         boutonsPanel.add(boutonRetourBtn);
@@ -154,5 +159,32 @@ public class AllPartiesByIdView extends JFrame {
 
     public JButton getBoutonRetourBtn() {
         return boutonRetourBtn;
+    }
+
+    private JButton createNewPartieBtn(Partie partie) {
+        JButton createNewPartieBtn = new JButton("Nouvelle partie");
+        createNewPartieBtn.addActionListener(_ -> {
+            HashMap<String, Object> formInput = new HashMap<>();
+            formInput.put("lengthCoup", 0);
+            formInput.put("maxColors", 0);
+            formInput.put("maxCoup", 0);
+
+            NewPartieForm newPartieForm = new NewPartieForm(formInput);
+            HashMap<String, Object> formResult = newPartieForm.getFormResult();
+
+            if (!formResult.isEmpty()) {
+                partie.setMaxCoup((int) formResult.get("maxCoup"));
+                partie.setMaxColors((int) formResult.get("maxColors"));
+                partie.setLengthCoup((int) formResult.get("lengthCoup"));
+                partie.initiateNouvellePartie(partie.getLengthCoup(),partie.getMaxCoups(),partie.getMaxColors(),
+                        joueur.getId());
+                this.setVisible(false);
+                JeuView vueJeu = new JeuView(partie, joueur);
+                JeuController jeu = JeuController.getInstance();
+                jeu.setPartieEnCours(partie);
+                this.dispose();
+            }
+        });
+        return createNewPartieBtn;
     }
 }

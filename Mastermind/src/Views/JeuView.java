@@ -1,5 +1,6 @@
 package Views;
 
+import Controllers.AllPartiesByIdController;
 import Controllers.JeuController;
 import Controllers.MenuController;
 import Enums.Couleur;
@@ -273,10 +274,15 @@ public class JeuView extends JFrame {
         public void actionPerformed(ActionEvent e) {
             if(joueur.getId() != 0) {
                 partie.savePartieToDb(etatPartie);
+                JeuView.this.dispose();
+                partie = null;
+                joueur = null;
+                AllPartiesByIdController newMenuPartie = new AllPartiesByIdController();
+            } else {
+                JeuView.this.dispose();
+                MenuView newMenu = new MenuView();
+                new MenuController(newMenu);
             }
-            JeuView.this.dispose();
-            MenuView newMenu = new MenuView();
-            new MenuController(newMenu);
         }
     }
 
