@@ -1,8 +1,10 @@
 package Views;
 
+import Controllers.ListeJoueursController;
 import Modele.Joueur;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ public class ListeJoueursView extends JFrame {
     private JPanel boutonsPanel;
     private JButton boutonRetourBtn;
     private JButton boutonSelectBtn;
-    private JButton boutonNouvPartieBtn;
+    private JButton boutonNouvJoueurBtn;
     private String[] colonnesNoms;
     private Object[][] donneesTableau;
     private Joueur lesJoueurs;
@@ -43,16 +45,17 @@ public class ListeJoueursView extends JFrame {
         listeJoueursPanel.add(listeTitre, BorderLayout.NORTH);
 
         listeTable = new JTable(donneesTableau, colonnesNoms);
+        listeTable.setDefaultEditor(Object.class, null);
         listeScroll = new JScrollPane(listeTable);
         listeJoueursPanel.add(listeScroll, BorderLayout.CENTER);
 
         boutonsPanel = new JPanel();
         boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         boutonRetourBtn = new JButton("Retour au menu");
-        boutonNouvPartieBtn = new JButton("Nouvelle partie");
+        boutonNouvJoueurBtn = new JButton("Nouveau joueur");
         boutonSelectBtn = new JButton("Sélectionner le joueur");
         boutonsPanel.add(boutonRetourBtn);
-        boutonsPanel.add(boutonNouvPartieBtn);
+        boutonsPanel.add(boutonNouvJoueurBtn);
         boutonsPanel.add(boutonSelectBtn);
         listeJoueursPanel.add(boutonsPanel, BorderLayout.SOUTH);
 
@@ -67,12 +70,41 @@ public class ListeJoueursView extends JFrame {
         return boutonSelectBtn;
     }
 
-    public JButton getBoutonNouvPartieBtn() {
-        return boutonNouvPartieBtn;
+    public JButton getBoutonNouvJoueurBtn() {
+        return boutonNouvJoueurBtn;
     }
 
     public JButton getBoutonRetourBtn() {
         return boutonRetourBtn;
+    }
+
+    public void addJoueur() {
+        JTextField nouvJoueurNom = new JTextField();
+
+        Object[] messageFormulaire = {
+                "Votre nom : ", nouvJoueurNom
+        };
+
+        int reponse = JOptionPane.showConfirmDialog(null, messageFormulaire, "Nouveau joueur", JOptionPane.OK_CANCEL_OPTION);
+
+        if(reponse == JOptionPane.OK_OPTION) {
+            String nomJoueur = nouvJoueurNom.getText();
+
+            if (nomJoueur.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vous avez laissé un champ vide.", "Avertissement", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            ListeJoueursController controller = new ListeJoueursController();
+            controller.addJoueurController(nomJoueur);
+            refreshTableData();
+        }
+    }
+
+    private void refreshTableData() {
+        ArrayList<HashMap<String, Object>> updatedListeDesJoueursDB = lesJoueurs.getAllJoueurInDb();
+        donneesTableau = convertData(updatedListeDesJoueursDB);
+        listeTable.setModel(new DefaultTableModel(donneesTableau, colonnesNoms));
     }
 
     private Object[][] convertData(ArrayList<HashMap<String, Object>> listeDesJoueurs) {

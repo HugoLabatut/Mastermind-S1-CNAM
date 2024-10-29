@@ -22,7 +22,8 @@ public class MenuController {
             public void actionPerformed(ActionEvent e) {
                 Joueur nouvJoueur = new Joueur();
                 Partie nouvPartie = new Partie();
-                nouvPartie.initiateNouvellePartieInvite(4,12,8);
+                nouvPartie.initiateNouvellePartieInvite(4,12,9);
+                view.setVisible(false);
                 JeuView vueJeu = new JeuView(nouvPartie, nouvJoueur);
                 JeuController jeu = JeuController.getInstance();
                 jeu.setPartieEnCours(nouvPartie);

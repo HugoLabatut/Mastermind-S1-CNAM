@@ -18,8 +18,10 @@ public class Partie implements PartieInterface{
     private int[][] coups;
     private int nbCoupsInDb = 0;
     private int maxCoups;
+    private int maxColors;
     private int lengthCoup;
-    private int etatPartie = 0;
+    UtilsColor UtilsColor;
+    private final int etatPartie = 0;
 
     public Partie() {}
 
@@ -36,6 +38,7 @@ public class Partie implements PartieInterface{
     public Partie initiateNouvellePartie(int lengthCoup, int maxCoups, int nbColor, int idJoueur) {
         this.lengthCoup = lengthCoup;
         this.maxCoups = maxCoups;
+        this.maxColors = nbColor;
         this.coupGagnant = generateCoupGagnant(lengthCoup, nbColor);
         this.idPartie = addPartieToDb(idJoueur, this.coupGagnant);
         return this;
@@ -44,6 +47,7 @@ public class Partie implements PartieInterface{
     public Partie initiateNouvellePartieInvite(int lengthCoup, int maxCoups, int nbColor) {
         this.lengthCoup = lengthCoup;
         this.maxCoups = maxCoups;
+        this.maxColors = nbColor;
         this.coupGagnant = generateCoupGagnant(lengthCoup, nbColor);
         return this;
     }
@@ -51,6 +55,8 @@ public class Partie implements PartieInterface{
     public int getEtatPartie() {
         return this.etatPartie;
     }
+
+    public int getMaxColors() { return this.maxColors; }
 
     public Color[] getCoupGagnantAsColors() {
         return Utils.UtilsColor.convertirIndicesEnCouleurs(coupGagnant);
@@ -74,7 +80,7 @@ public class Partie implements PartieInterface{
         int[] coupGagnant = new int[length];
         Random r = new Random();
         for (int i = 0; i < length; i++) {
-            int n = r.nextInt(nbColor-1) + 1;
+            int n = r.nextInt(nbColor);
             coupGagnant[i] = n;
         }
         return coupGagnant;
@@ -159,14 +165,16 @@ public class Partie implements PartieInterface{
     }
 
     public int addPartieToDb(int idJoueur, int[] suitePartie) {
-        String requete = "INSERT INTO partie (etat_partie, suite_partie, nbcoups_partie, id_joueur) VALUES (0, ?, 0, " +
-                "?)";
+        String requete = "INSERT INTO partie (etat_partie, suite_partie, nbcoups_partie, id_joueur, nbcouleur_partie)" +
+                " VALUES (0, ?, ?, ?, ?)";
         try (
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS) // Indiquer que tu veux les clés générées
         ) {
             stmt.setInt(1, UtilsColor.arrayToInt(suitePartie));
-            stmt.setInt(2, idJoueur);
+            stmt.setInt(2, maxCoups);
+            stmt.setInt(3, idJoueur);
+            stmt.setInt(4, maxColors);
             stmt.executeUpdate();
 
             // Obtenir les clés générées
@@ -184,14 +192,13 @@ public class Partie implements PartieInterface{
     }
 
     public void savePartieToDb(int etatPartie) {
-        String requete = "UPDATE partie SET etat_partie = ?, nbcoups_partie = ? WHERE id_partie = ?";
+        String requete = "UPDATE partie SET etat_partie = ? WHERE id_partie = ?";
         try (
                 Connection con = DBConnector.connectToDB();
                 PreparedStatement stmt = con.prepareStatement(requete)
         ) {
             stmt.setInt(1, etatPartie);
-            stmt.setInt(2, coups.length);
-            stmt.setInt(3, idPartie);
+            stmt.setInt(2, idPartie);
             stmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Erreur DB lors de la modification : " + e.getMessage() + "\n");
@@ -199,7 +206,7 @@ public class Partie implements PartieInterface{
         }
 
         for (int i = nbCoupsInDb; i < coups.length; i++) {
-            String requeteCoup = "INSERT INTO coups (contenu_coup, rang_coup, id_partie) VALUES (?, ?, ?)";
+            String requeteCoup = "INSERT IGNORE INTO coups (contenu_coup, rang_coup, id_partie) VALUES (?, ?, ?)";
             try (
                     Connection con = DBConnector.connectToDB();
                     PreparedStatement stmt = con.prepareStatement(requeteCoup)
