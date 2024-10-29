@@ -21,7 +21,7 @@ public class Partie implements PartieInterface{
     private int maxColors;
     private int lengthCoup;
     UtilsColor UtilsColor;
-    private final int etatPartie = 0;
+    private int etatPartie = 0;
 
     public Partie() {}
 

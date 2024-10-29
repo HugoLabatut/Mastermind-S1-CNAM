@@ -147,7 +147,7 @@ public class JeuView extends JFrame {
         currentCombination = new Color[partie.getLengthCoup()];  // Initialiser avec la longueur de la combinaison
 
         Color[][] previousCoups = partie.getCoupsAsColors();
-        if(previousCoups != null) {displayPrecedentCoups(previousCoups);}
+        if(previousCoups != null) {displayPrecedentCoups();}
         setVisible(true);
     }
 
