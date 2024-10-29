@@ -39,9 +39,9 @@ public class ListeJoueursView extends JFrame {
         add(listeJoueursPanel);
 
         listeTitre = new JLabel("Liste des joueurs");
-        listeTitre.setHorizontalAlignment(JLabel.LEFT);
+        listeTitre.setHorizontalAlignment(JLabel.CENTER);
         listeTitre.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        listeTitre.setFont(new Font("Arial", Font.PLAIN, 18));
+        listeTitre.setFont(new Font("Arial", Font.PLAIN, 20));
         listeJoueursPanel.add(listeTitre, BorderLayout.NORTH);
 
         listeTable = new JTable(donneesTableau, colonnesNoms);
@@ -49,18 +49,33 @@ public class ListeJoueursView extends JFrame {
         listeScroll = new JScrollPane(listeTable);
         listeJoueursPanel.add(listeScroll, BorderLayout.CENTER);
 
-        boutonsPanel = new JPanel();
-        boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        boutonRetourBtn = new JButton("Retour au menu");
+        // Panel pour les boutons
+        JPanel boutonsPanel = new JPanel();
+        boutonsPanel.setLayout(new BorderLayout());
+
+        // Créer un sous-panel pour le centre
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         boutonNouvJoueurBtn = new JButton("Nouveau joueur");
+        centerPanel.add(boutonNouvJoueurBtn);
+        boutonsPanel.add(centerPanel, BorderLayout.CENTER);
+
+        // Créer un sous-panel pour la gauche
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         boutonSelectBtn = new JButton("Sélectionner le joueur");
-        boutonsPanel.add(boutonRetourBtn);
-        boutonsPanel.add(boutonNouvJoueurBtn);
-        boutonsPanel.add(boutonSelectBtn);
+        leftPanel.add(boutonSelectBtn);
+        boutonsPanel.add(leftPanel, BorderLayout.WEST);
+
+        // Créer un sous-panel pour la droite
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        boutonRetourBtn = new JButton("Retour au menu");
+        rightPanel.add(boutonRetourBtn);
+        boutonsPanel.add(rightPanel, BorderLayout.EAST);
+
         listeJoueursPanel.add(boutonsPanel, BorderLayout.SOUTH);
 
         setVisible(true);
     }
+
 
     public JTable getListeTable() {
         return listeTable;

@@ -100,8 +100,6 @@ public class Partie implements PartieInterface{
     }
 
 
-    // Partie CRUD (ou CRU dans ce cas)
-
     public ArrayList<HashMap<String, Object>> readAllPartiesOfPlayerFromDb(int idJoueur) {
         String requete = "SELECT * FROM partie WHERE id_joueur = ?";
         try (

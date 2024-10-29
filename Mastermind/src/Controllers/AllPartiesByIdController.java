@@ -5,6 +5,7 @@ import Modele.Joueur;
 import Utils.UtilsMethods;
 import Views.AllPartiesByIdView;
 import Views.JeuView;
+import Views.ListeJoueursView;
 import Views.MenuView;
 
 import javax.swing.*;
@@ -34,8 +35,10 @@ public class AllPartiesByIdController {
         this.view.getBoutonRetourBtn().addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 view.dispose();
-                MenuView menuView = new MenuView();
-                new MenuController(menuView);
+                ListeJoueursView  listeJoueursView  = new ListeJoueursView();
+                new ListeJoueursController(listeJoueursView);
+                listeJoueursView.setVisible(true);
+
             }
         });
     }

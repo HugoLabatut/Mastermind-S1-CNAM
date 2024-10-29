@@ -35,29 +35,46 @@ public class AllPartiesByIdView extends JFrame {
 
     public void initializeView() {
         tableauParties = AllPartiesByIdController.recupererPartiesJoueur();
+
+        // Créer un panel pour le titre
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+        titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Ajoute des marges autour
+
+        // Configuration du titre
         titleLabel.setText("Parties de " + joueur.getNom());
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
 
-        playerNameLabel.setText("Nom du Joueur : " + playerNameLabel.getText());
+        // Ajouter le titre au panel
+        titlePanel.add(titleLabel);
 
-        listeJoueursPanel = new JPanel();
-        listeJoueursPanel.setLayout(new BorderLayout());
-        listeJoueursPanel.add(titleLabel);
-        add(listeJoueursPanel, BorderLayout.NORTH);
+        // Ajouter le panel à la fenêtre
+        add(titlePanel, BorderLayout.NORTH);
+
+        playerNameLabel.setText("Nom du Joueur : " + joueur.getNom());
 
         afficherPartiesJoueur(tableauParties);
 
-        boutonsPanel = new JPanel();
-        boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        boutonNouvPartieBtn = new JButton("Nouvelle partie");
-        boutonRetourBtn = new JButton("Retour au menu");
-        boutonsPanel.add(boutonNouvPartieBtn);
-        boutonsPanel.add(boutonRetourBtn);
+        // Panel pour les boutons
+        JPanel boutonsPanel = new JPanel();
+        boutonsPanel.setLayout(new BorderLayout());
+
+        // Bouton "Nouvelle partie"
+        JButton boutonNouvPartieBtn = new JButton("Nouvelle partie");
+        boutonsPanel.add(boutonNouvPartieBtn, BorderLayout.CENTER);
+
+        // Utiliser le bouton défini au niveau de la classe
+        boutonRetourBtn = new JButton("Retour au menu"); // Initialisez ici si ce n'est pas encore fait
+        boutonsPanel.add(boutonRetourBtn, BorderLayout.EAST);
+
         add(boutonsPanel, BorderLayout.SOUTH);
+
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
+
 
     public void afficherPartiesJoueur(Object[][] tableauParties) {
         String[] columnNames = {"ID Partie", "État", "Coups Max", "Action"};
@@ -105,10 +122,9 @@ public class AllPartiesByIdView extends JFrame {
     class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
-            setText("Voir la partie"); // Texte fixe pour le bouton
+            setText("Voir la partie");
         }
 
-        @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             return this;
         }
