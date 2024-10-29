@@ -8,8 +8,7 @@ import Modele.Partie;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Arrays;
 
 public class JeuView extends JFrame {
@@ -35,16 +34,20 @@ public class JeuView extends JFrame {
         this.etatPartie = partie.getEtatPartie();
         controller = JeuController.getInstance();
 
-//        Color[] availableColors = new Color[partie.getMaxColors()];
-//        for (int i = 0; i < partie.getMaxColors(); i++) {
-        Color[] availableColors = new Color[Couleur.values().length];
-        for (int i = 0; i < Couleur.values().length; i++) {
+        Color[] availableColors = new Color[partie.getMaxColors()];
+        for (int i = 0; i < partie.getMaxColors(); i++) {
             availableColors[i] = Couleur.values()[i].getSwingColor();
         }
 
         setTitle("Mastermind");
-        setSize(800, 800); // Agrandir la fenêtre sur l'axe X
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(900, 800); // Agrandir la fenêtre sur l'axe X
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closingWindowListener();
+            }
+        });
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -165,14 +168,14 @@ public class JeuView extends JFrame {
     private void displayPrecedentCoups() {
         Color[][] previousCoups = partie.getCoupsAsColors(); // Récupère les coups précédents
         if (previousCoups != null) {
-        for (int row = 0; row < previousCoups.length; row++) {
-            for (int col = 0; col < previousCoups[row].length; col++) {
-                if (previousCoups[row][col] != null) {
-                    boardButtons[row][col].setBackground(previousCoups[row][col]);
+            for (int row = previousCoups.length - 1; row >= 0; row--) { // Inversion de l'ordre des lignes
+                for (int col = 0; col < previousCoups[row].length; col++) {
+                    if (previousCoups[row][col] != null) {
+                        boardButtons[row][col].setBackground(previousCoups[row][col]);
+                    }
                 }
             }
-        }
-        currentRow = partie.getCoupsAsColors().length;
+            currentRow = previousCoups.length;
         }
     }
 
@@ -250,7 +253,7 @@ public class JeuView extends JFrame {
                 }
 
                 //Affichage du message de victoire et setting de l'état de la partie
-                if (result[0] == 1) {
+                if (result[2] == 1) {
                     infoLabel.setText("Partie terminée ! Vous avez gagné !\n");
                     etatPartie = 1;
                 } else {
@@ -269,6 +272,23 @@ public class JeuView extends JFrame {
             JeuView.this.dispose();
             MenuView newMenu = new MenuView();
             new MenuController(newMenu);
+        }
+    }
+
+    private void closingWindowListener() {
+        int reponse = JOptionPane.showConfirmDialog(
+                null,
+                "Voulez-vous quitter l'application ?",
+                "Quitter l'application",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (reponse == JOptionPane.YES_OPTION) {
+            if (joueur.getId() != 0) {
+                partie.savePartieToDb(etatPartie);
+            }
+            System.exit(0);
         }
     }
 }
