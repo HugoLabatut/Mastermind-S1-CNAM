@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBConnector {
     public static Connection connectToDB() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mastermind", "root", "");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mastermind", "root", "rootpassword");
     }
 
     public static void main(String[] args) {

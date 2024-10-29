@@ -1,5 +1,7 @@
 package Controllers;
 
+import Modele.Joueur;
+import Views.AllPartiesByIdView;
 import Views.ListeJoueursView;
 import Views.MenuView;
 
@@ -24,10 +26,10 @@ public class ListeJoueursController {
             }
         });
 
-        this.view.getBoutonNouvPartieBtn().addActionListener(new ActionListener() {
+        this.view.getBoutonNouvJoueurBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Coder fonction Nouvelle partie.");
+                view.addJoueur();
             }
         });
 
@@ -45,6 +47,13 @@ public class ListeJoueursController {
                             "DEBUG joueur sélection.",
                             JOptionPane.INFORMATION_MESSAGE
                     );
+                    /*
+                    Joueur joueur = new Joueur();
+                    int idJoueur = Integer.parseInt(joueur.getOneJoueurInDb((Integer) id));
+                    System.out.println(idJoueur);
+                    AllPartiesByIdView partiesView = new AllPartiesByIdView();
+                    AllPartiesByIdController partiesController = new AllPartiesByIdController(partiesView, idJoueur);
+                     */
                 } else {
                     JOptionPane.showMessageDialog(
                             null,
@@ -55,5 +64,13 @@ public class ListeJoueursController {
                 }
             }
         });
+    }
+
+    public ListeJoueursController() {}
+
+    public void addJoueurController(String nomJoueur) {
+        Joueur joueur = new Joueur();
+        joueur.setNom(nomJoueur);
+        joueur.createJoueurInDB(nomJoueur);
     }
 }

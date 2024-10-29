@@ -26,6 +26,10 @@ public class Joueur implements JoueurInterface {
         return this.nomJoueur;
     }
 
+    public void setNom(String nom) {
+        this.nomJoueur = nom;
+    }
+
     public String toString() {
         return ("Identifiant " + this.idJoueur + "\n" +
                 "Nom " + this.nomJoueur + "\n");
