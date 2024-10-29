@@ -57,7 +57,7 @@ public class AllPartiesByIdView extends JFrame {
 
         boutonsPanel = new JPanel();
         boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        boutonNouvPartieBtn = createNewPartieBtn(partie);
+        boutonNouvPartieBtn = createNewPartieBtn();
         boutonRetourBtn = new JButton("Retour au menu");
         boutonsPanel.add(boutonNouvPartieBtn);
         boutonsPanel.add(boutonRetourBtn);
@@ -161,7 +161,7 @@ public class AllPartiesByIdView extends JFrame {
         return boutonRetourBtn;
     }
 
-    private JButton createNewPartieBtn(Partie partie) {
+    private JButton createNewPartieBtn() {
         JButton createNewPartieBtn = new JButton("Nouvelle partie");
         createNewPartieBtn.addActionListener(_ -> {
             HashMap<String, Object> formInput = new HashMap<>();
@@ -173,10 +173,9 @@ public class AllPartiesByIdView extends JFrame {
             HashMap<String, Object> formResult = newPartieForm.getFormResult();
 
             if (!formResult.isEmpty()) {
-                partie.setMaxCoup((int) formResult.get("maxCoup"));
-                partie.setMaxColors((int) formResult.get("maxColors"));
-                partie.setLengthCoup((int) formResult.get("lengthCoup"));
-                partie.initiateNouvellePartie(partie.getLengthCoup(),partie.getMaxCoups(),partie.getMaxColors(),
+                System.out.print(formInput);
+                partie = new Partie();
+                partie.initiateNouvellePartie((int) formResult.get("lengthCoup"),(int) formResult.get("maxCoup"),(int) formResult.get("maxColors"),
                         joueur.getId());
                 this.setVisible(false);
                 JeuView vueJeu = new JeuView(partie, joueur);

@@ -32,6 +32,7 @@ public class JeuView extends JFrame {
         this.partie = partie;
         this.joueur = joueur;
         this.currentRow = partie.getMaxCoups();
+        System.out.print(currentRow);
         this.etatPartie = partie.getEtatPartie();
         controller = JeuController.getInstance();
 
@@ -66,7 +67,7 @@ public class JeuView extends JFrame {
             colorSelectionPanel.add(colorButton);
         }
 
-        // Plateau de jeu (13 lignes et (partie.getLengthCoup() + 1) colonnes pour les résultats)
+        // Plateau de jeu (getMaxCoups+1 lignes et getLengthCoup() + 1 colonnes pour les résultats)
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(partie.getMaxCoups() + 1, partie.getLengthCoup() + 1));  // +1 pour afficher [x, y, z] à droite
 
@@ -147,8 +148,7 @@ public class JeuView extends JFrame {
 
         currentCombination = new Color[partie.getLengthCoup()];  // Initialiser avec la longueur de la combinaison
 
-        Color[][] previousCoups = partie.getCoupsAsColors();
-        if(previousCoups != null) {displayPrecedentCoups();}
+        displayPrecedentCoups();
         setVisible(true);
     }
 
@@ -169,7 +169,7 @@ public class JeuView extends JFrame {
 
     private void displayPrecedentCoups() {
         Color[][] previousCoups = partie.getCoupsAsColors(); // Récupère les coups précédents
-        if (previousCoups != null) {
+        if (previousCoups.length > 0) {
             for (int row = previousCoups.length - 1; row >= 0; row--) { // Inversion de l'ordre des lignes
                 for (int col = 0; col < previousCoups[row].length; col++) {
                     if (previousCoups[row][col] != null) {
@@ -179,9 +179,6 @@ public class JeuView extends JFrame {
             }
             currentRow = previousCoups.length;
         }
-
-        // Mettre à jour currentRow si nécessaire
-        currentRow = previousCoups.length;
     }
 
 
@@ -226,8 +223,7 @@ public class JeuView extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Envoyer la combinaison au contrôleur et recevoir les résultats
-            System.out.print(Arrays.toString(currentCombination));
-            int[] result = controller.getRetourCoup(currentCombination); // À changer pour faire un appel à la vérification
+            int[] result = controller.getRetourCoup(currentCombination);
 
             // Mettre à jour le label des résultats
             resultLabels[currentRow][0].setText("<html>Couleurs bien placées : " + result[0] + "<br/>Couleurs correctes mais mal placées : " + result[1] + "</html>");
@@ -276,9 +272,10 @@ public class JeuView extends JFrame {
                 partie.savePartieToDb(etatPartie);
                 JeuView.this.dispose();
                 partie = null;
-                joueur = null;
-                AllPartiesByIdController newMenuPartie = new AllPartiesByIdController();
+                AllPartiesByIdController newMenuPartie = new AllPartiesByIdController(joueur);
             } else {
+                partie = null;
+                joueur = null;
                 JeuView.this.dispose();
                 MenuView newMenu = new MenuView();
                 new MenuController(newMenu);
