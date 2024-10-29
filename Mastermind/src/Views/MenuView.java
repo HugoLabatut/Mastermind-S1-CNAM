@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 
 public class MenuView extends JFrame {
     private JButton nouvPartieBtn;
-    private JButton listePartieBtn;
+    // private JButton listePartieBtn;
     private JButton listeJoueursBtn;
     private JButton quitterAppBtn;
 
@@ -33,12 +33,12 @@ public class MenuView extends JFrame {
 
         // Boutons
         nouvPartieBtn = new JButton("Nouvelle partie en tant qu'invité");
-        listePartieBtn = new JButton("Liste des parties");
+        // listePartieBtn = new JButton("Liste des parties");
         listeJoueursBtn = new JButton("Liste des joueurs");
         quitterAppBtn = new JButton("Quitter");
 
         menuPanel.add(nouvPartieBtn);
-        menuPanel.add(listePartieBtn);
+        // menuPanel.add(listePartieBtn);
         menuPanel.add(listeJoueursBtn);
         menuPanel.add(quitterAppBtn);
 
@@ -59,7 +59,9 @@ public class MenuView extends JFrame {
         return listeJoueursBtn;
     }
 
+    /*
     public JButton getListePartieBtn() {
         return listePartieBtn;
     }
+    */
 }

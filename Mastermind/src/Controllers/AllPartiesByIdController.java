@@ -19,9 +19,9 @@ public class AllPartiesByIdController {
     private Joueur joueurModel;
     private AllPartiesByIdView view;
 
-    public AllPartiesByIdController() {
+    public AllPartiesByIdController(Joueur joueur) {
         this.partieModel = new Partie();
-        this.joueurModel = new Joueur();
+        this.joueurModel = joueur;
         this.view = new AllPartiesByIdView(joueurModel);
         view.setController(this);
 
@@ -43,7 +43,7 @@ public class AllPartiesByIdController {
     // Méthode pour afficher les parties d'un joueur
     public Object[][] recupererPartiesJoueur() {
 //        int idJoueur = joueurModel.getId();
-        int idJoueur = 1;
+        int idJoueur = joueurModel.getId();
         ArrayList<HashMap<String, Object>> parties = partieModel.readAllPartiesOfPlayerFromDb(idJoueur);
         // Mise à jour de la vue avec les données du joueur et des parties
         return UtilsMethods.convertirEnTableau(parties);

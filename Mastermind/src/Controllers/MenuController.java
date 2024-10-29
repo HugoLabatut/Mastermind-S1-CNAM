@@ -31,6 +31,7 @@ public class MenuController {
             }
         });
 
+        /*
         this.view.getListePartieBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -42,6 +43,7 @@ public class MenuController {
                 view.setVisible(false);
             }
         });
+         */
 
         this.view.getListeJoueursBtn().addActionListener(new ActionListener() {
             @Override
