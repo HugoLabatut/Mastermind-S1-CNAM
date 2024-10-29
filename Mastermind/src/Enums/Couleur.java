@@ -10,7 +10,8 @@ public enum Couleur {
     NOIR(Color.BLACK),
     ORANGE(Color.ORANGE),
     MARRON(new Color(165, 42, 42)), // Couleur marron personnalisée
-    FUCHSIA(new Color(255, 0, 255)); // Couleur fuchsia personnalisée
+    FUCHSIA(new Color(255, 0, 255)), // Couleur fuchsia personnalisée
+    BLEUCLAIR(new Color(51,204,255));
 
     private final Color swingColor;
 
