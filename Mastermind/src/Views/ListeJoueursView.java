@@ -41,6 +41,7 @@ public class ListeJoueursView extends JFrame {
         listeTitre = new JLabel("Liste des joueurs");
         listeTitre.setHorizontalAlignment(JLabel.LEFT);
         listeTitre.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        listeTitre.setFont(new Font("Arial", Font.PLAIN, 18));
         listeJoueursPanel.add(listeTitre, BorderLayout.NORTH);
 
         listeTable = new JTable(donneesTableau, colonnesNoms);

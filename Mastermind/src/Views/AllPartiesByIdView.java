@@ -1,33 +1,62 @@
 package Views;
 
 import Controllers.AllPartiesByIdController;
+import Modele.Joueur;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
 public class AllPartiesByIdView extends JFrame {
+
     private JTable partiesTable;
     private JLabel playerNameLabel = new JLabel();
     private JLabel titleLabel = new JLabel();
     private Object[][] tableauParties;
 
-    public AllPartiesByIdView() {}
+    private JPanel listeJoueursPanel;
+    private JPanel boutonsPanel;
+    private JButton boutonRetourBtn;
+    private JButton boutonNouvPartieBtn;
+
+    private AllPartiesByIdController AllPartiesByIdController;
+
+    private Joueur joueur;
+
+    public AllPartiesByIdView(Joueur joueur) {
+        this.joueur = joueur;
+    }
+
+    public void setController(AllPartiesByIdController controller) {
+        this.AllPartiesByIdController = controller;
+    }
 
     public void initializeView() {
         tableauParties = AllPartiesByIdController.recupererPartiesJoueur();
-        setTitle("Toutes les parties");
+        titleLabel.setText("Parties de " + joueur.getNom());
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        titleLabel.setText("Parties de " + playerNameLabel.getText());
         playerNameLabel.setText("Nom du Joueur : " + playerNameLabel.getText());
 
+        listeJoueursPanel = new JPanel();
+        listeJoueursPanel.setLayout(new BorderLayout());
+        listeJoueursPanel.add(titleLabel);
+        add(listeJoueursPanel, BorderLayout.NORTH);
+
         afficherPartiesJoueur(tableauParties);
+
+        boutonsPanel = new JPanel();
+        boutonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        boutonNouvPartieBtn = new JButton("Nouvelle partie");
+        boutonRetourBtn = new JButton("Retour au menu");
+        boutonsPanel.add(boutonNouvPartieBtn);
+        boutonsPanel.add(boutonRetourBtn);
+        add(boutonsPanel, BorderLayout.SOUTH);
     }
 
     public void afficherPartiesJoueur(Object[][] tableauParties) {
@@ -41,7 +70,7 @@ public class AllPartiesByIdView extends JFrame {
 
         for (Object[] partie : tableauParties) {
             int idPartie = (int) partie[1];
-            int etat = (int) partie[4];
+            int etat = (int) partie[5];
             int nbcoupsPartie = (int) partie[2];
             String etatPartie = obtenirEtatPartie(etat);
 
@@ -60,7 +89,7 @@ public class AllPartiesByIdView extends JFrame {
         }
 
         JScrollPane scrollPane = new JScrollPane(partiesTable);
-        add(scrollPane);
+        add(scrollPane, BorderLayout.CENTER);
     }
 
     private String obtenirEtatPartie(int etat) {
@@ -121,5 +150,9 @@ public class AllPartiesByIdView extends JFrame {
             clicked = false;
             return super.stopCellEditing();
         }
+    }
+
+    public JButton getBoutonRetourBtn() {
+        return boutonRetourBtn;
     }
 }

@@ -130,6 +130,9 @@ public class Partie implements PartieInterface{
                 this.idPartie = rs.getInt("id_partie");
                 int number = rs.getInt(3); // Récupère la 3ème colonne comme entier
                 this.coupGagnant = UtilsColor.intToArray(number);
+                this.maxCoups = rs.getInt("nbcoups_partie");
+                this.lengthCoup = String.valueOf(rs.getInt("suite_partie")).length();
+                this.etatPartie = rs.getInt("etat_partie");
                 readCoupsFromDb(idPartie);
             } else {
                 throw new SQLException("Aucune partie trouvée avec l'ID donné.");

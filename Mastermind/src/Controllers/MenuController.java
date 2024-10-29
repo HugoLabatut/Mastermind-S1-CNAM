@@ -27,23 +27,16 @@ public class MenuController {
                 JeuView vueJeu = new JeuView(nouvPartie, nouvJoueur);
                 JeuController jeu = JeuController.getInstance();
                 jeu.setPartieEnCours(nouvPartie);
+                view.dispose();
             }
         });
 
         this.view.getListePartieBtn().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Initialiser la vue des parties
-                AllPartiesByIdView allPartiesByIdView = new AllPartiesByIdView();
 
                 // Initialiser le contrôleur des parties
-                AllPartiesByIdController allPartiesByIdController = new AllPartiesByIdController(allPartiesByIdView);
-
-                // Activer la vue
-                allPartiesByIdView.initializeView();
-
-                // Afficher la vue
-                allPartiesByIdView.setVisible(true);
+                AllPartiesByIdController allPartiesByIdController = new AllPartiesByIdController();
 
                 // Masquer la vue du menu (optionnel selon votre logique)
                 view.setVisible(false);

@@ -146,7 +146,8 @@ public class JeuView extends JFrame {
 
         currentCombination = new Color[partie.getLengthCoup()];  // Initialiser avec la longueur de la combinaison
 
-        displayPrecedentCoups();
+        Color[][] previousCoups = partie.getCoupsAsColors();
+        if(previousCoups != null) {displayPrecedentCoups(previousCoups);}
         setVisible(true);
     }
 
@@ -177,7 +178,11 @@ public class JeuView extends JFrame {
             }
             currentRow = previousCoups.length;
         }
+
+        // Mettre à jour currentRow si nécessaire
+        currentRow = previousCoups.length;
     }
+
 
     // Vérifie si la combinaison est complète pour activer ou désactiver le bouton "Confirmer"
     private void updateConfirmButtonState() {

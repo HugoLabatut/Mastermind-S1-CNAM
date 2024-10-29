@@ -7,6 +7,7 @@ CREATE TABLE partie(
                        id_partie INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
                        etat_partie SMALLINT, -- 0 = partie en cours, 1 = partie terminée gagnée, 2 = partie terminée perdue
                        suite_partie SMALLINT, -- Suite gagnante de la partie (à optimiser)
+                       nbcouleur_partie INT,
                        nbcoups_partie INT, -- Nombre de coups max / d'essais de la partie
                        id_joueur INT NOT NULL,
                        FOREIGN KEY(id_joueur) REFERENCES joueur(id_joueur)
