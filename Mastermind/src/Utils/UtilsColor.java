@@ -2,6 +2,7 @@ package Utils;
 
 import Enums.Couleur;
 import java.awt.Color;
+import java.util.Arrays;
 
 public class UtilsColor {
 
@@ -27,6 +28,7 @@ public class UtilsColor {
 
     public static Color[] convertirIndicesEnCouleurs(int[] indices) {
         Color[] couleurs = new Color[indices.length];
+        System.out.print(Arrays.toString(indices));
 
         for (int i = 0; i < indices.length; i++) {
             int indice = indices[i];
@@ -39,16 +41,16 @@ public class UtilsColor {
     private static Color getCouleurFromIndice(int indice) {
         Couleur[] valeursCouleur = Couleur.values();
 
-        if (indice < 0 || indice >= valeursCouleur.length) {
+        if (indice < 0 || indice > valeursCouleur.length) {
             throw new IllegalArgumentException("Indice en dehors des limites de l'énumération : " + indice);
         }
 
-        return valeursCouleur[indice].getSwingColor(); // Retourne la couleur associée à l'indice
+        return valeursCouleur[indice-1].getSwingColor(); // Retourne la couleur associée à l'indice
     }
 
     // Transforme un array en int des chiffres qui le composent (opposé d'intToArray)
     // ex. entrée [1,2,3,4], sortie 1234
-    public int arrayToInt(int[] tableau) {
+    public static int arrayToInt(int[] tableau) {
         int nombre = 0;
         for (int j : tableau) {
             nombre = nombre * 10 + j; // Décale les chiffres déjà présents à gauche et ajoute le nouveau chiffre
@@ -58,7 +60,7 @@ public class UtilsColor {
 
     // Transforme un int en array des chiffres qui le composent (opposé d'arrayToInt)
     // ex. entrée 1234, sortie [1,2,3,4]
-    public int[] intToArray(int nombre) {
+    public static int[] intToArray(int nombre) {
         String nombreString = String.valueOf(nombre);
         int[] chiffres = new int[nombreString.length()];
 

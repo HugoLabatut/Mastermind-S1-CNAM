@@ -143,7 +143,8 @@ public class JeuView extends JFrame {
 
         currentCombination = new Color[partie.getLengthCoup()];  // Initialiser avec la longueur de la combinaison
 
-        displayPrecedentCoups();
+        Color[][] previousCoups = partie.getCoupsAsColors();
+        if(previousCoups != null) {displayPrecedentCoups(previousCoups);}
         setVisible(true);
     }
 
@@ -162,19 +163,36 @@ public class JeuView extends JFrame {
         return new JScrollPane(rulesArea);
     }
 
-    private void displayPrecedentCoups() {
-        Color[][] previousCoups = partie.getCoupsAsColors(); // Récupère les coups précédents
-        if (previousCoups != null) {
+    private void displayPrecedentCoups(Color[][] previousCoups) {
+         // Récupère les coups précédents
+        System.out.println(Arrays.deepToString(previousCoups));
+
+        // Réinitialiser les boutons à la couleur par défaut avant d'appliquer les coups précédents
+        for (JButton[] boardButton : boardButtons) {
+            for (int col = 0; col < boardButton.length; col++) {
+                // Réinitialiser à une couleur par défaut (par exemple, blanc)
+                boardButton[col].setBackground(Color.WHITE);
+            }
+        }
+
+        // Parcourir tous les coups précédents
         for (int row = 0; row < previousCoups.length; row++) {
             for (int col = 0; col < previousCoups[row].length; col++) {
                 if (previousCoups[row][col] != null) {
-                    boardButtons[row][col].setBackground(previousCoups[row][col]);
+                    boardButtons[currentRow-row][col].setBackground(previousCoups[row][col]);
                 }
             }
         }
-        currentRow = partie.getCoupsAsColors().length;
+
+        // Affichage de la bonne solution
+        for (int col = 0; col < partie.getLengthCoup(); col++) {
+            boardButtons[0][col].setBackground(correctCombination[col]);
         }
+
+        // Mettre à jour currentRow si nécessaire
+        currentRow = previousCoups.length;
     }
+
 
     // Vérifie si la combinaison est complète pour activer ou désactiver le bouton "Confirmer"
     private void updateConfirmButtonState() {
