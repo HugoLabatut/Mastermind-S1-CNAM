@@ -38,7 +38,7 @@ public class NewPartieForm {
             if (result == JOptionPane.OK_OPTION) {
                 if (lengthCoupField.getText().trim().isEmpty() || maxColorsField.getText().trim().isEmpty() || maxCoupsField.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Tous les champs doivent être remplis.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                } else if (Integer.parseInt(maxCoupsField.getText().trim()) > 9 || Integer.parseInt(maxCoupsField.getText().trim()) < 0) {
+                } else if (Integer.parseInt(maxColorsField.getText().trim()) > 9 || Integer.parseInt(maxColorsField.getText().trim()) < 0) {
                     JOptionPane.showMessageDialog(null, "Merci de saisir un nombre de couleur max entre 1 et 9 inclus" +
                                     ".", "Erreur",
                             JOptionPane.ERROR_MESSAGE);
