@@ -168,8 +168,9 @@ public class JeuView extends JFrame {
     }
 
     private void displayPrecedentCoups() {
-        Color[][] previousCoups = partie.getCoupsAsColors(); // Récupère les coups précédents
-        if (previousCoups.length > 0) {
+        Color[][] previousCoups = partie.getCoupsAsColors();
+        System.out.print(Arrays.deepToString(previousCoups));// Récupère les coups précédents
+        if (previousCoups != null && previousCoups.length > 0) {
             for (int row = previousCoups.length - 1; row >= 0; row--) { // Inversion de l'ordre des lignes
                 for (int col = 0; col < previousCoups[row].length; col++) {
                     if (previousCoups[row][col] != null) {
