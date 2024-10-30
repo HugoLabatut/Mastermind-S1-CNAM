@@ -66,7 +66,7 @@ public class AllPartiesByIdView extends JFrame {
         boutonsPanel.setLayout(new BorderLayout());
 
         // Bouton "Nouvelle partie"
-        JButton boutonNouvPartieBtn = new JButton("Nouvelle partie");
+        JButton boutonNouvPartieBtn = createNewPartieBtn();
         boutonsPanel.add(boutonNouvPartieBtn, BorderLayout.CENTER);
 
         // Utiliser le bouton défini au niveau de la classe
