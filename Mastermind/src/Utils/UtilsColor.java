@@ -45,7 +45,7 @@ public class UtilsColor {
             throw new IllegalArgumentException("Indice en dehors des limites de l'énumération : " + indice);
         }
 
-        return valeursCouleur[indice-1].getSwingColor(); // Retourne la couleur associée à l'indice
+        return valeursCouleur[indice].getSwingColor(); // Retourne la couleur associée à l'indice
     }
 
     // Transforme un array en int des chiffres qui le composent (opposé d'intToArray)
